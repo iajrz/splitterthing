@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Splitter Thing!</title>
+    </head>
+    <body>
+        <textarea id="original"></textarea>
+        <br>
+        <label>Number of Characters: <input id="chars" type="number" value="280" min="20" max="2000"></label>
+        <br>
+        <button id="split" onclick="split()">Split!</button>
+        <div id="boxes">
+        </div>
+        <script>      
+         function make_box(contents){
+             let new_box=document.createElement('div')
+             let box_container=document.getElementById('boxes');
+             new_box.innerText=contents;
+             box_container.appendChild(new_box)
+         }
+
+         function split(){
+             let box_container=document.getElementById('boxes');
+             box_container.innerHTML="";
+             let sauce=document.getElementById('original').value;
+             let max_box_chars=parseInt(document.getElementById('chars').value);
+
+             
+             if (max_box_chars==NaN) {
+                 return;
+             }
+             
+             let sauce_size=sauce.length;
+             let idx=0
+
+             for(;idx<sauce_size;){
+                 let start=idx;
+                 let curboxchars=0
+                 // fill a box
+                 while(idx<sauce_size && curboxchars<max_box_chars){
+                     idx++;
+                     curboxchars++;
+                 }
+                 let end=idx;
+                 if(idx<sauce_size){ // if we're not done with the text...
+                     // make the cut sensible! if we ain't at the end of a word, roll back to closest space
+                     while(curboxchars>0 && sauce[idx]!=' '){
+                         idx--;
+                         curboxchars--;
+                     }
+                     if(curboxchars==0){ // no spaces in the WHOLE box? Caveman break word!
+                         idx=end;
+                     }
+                 }
+                 make_box(sauce.substring(start,idx+1))//substring includes start but excludes end!
+             }
+             
+         }
+        </script>
+    </body>
+</html>
