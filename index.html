@@ -3,20 +3,36 @@
     <head>
         <meta charset="utf-8">
         <title>Splitter Thing!</title>
+        <style>
+         .box{
+             margin: 15px 15px 15px 15px;
+         }
+         .copier{
+             margin-left: 15px;
+             width: 100px;
+         }
+         #original {
+             margin: 15px;
+         }
+        </style>
     </head>
     <body>
-        <textarea id="original"></textarea>
+        <div>Splittable Text:</div>
+        <textarea id="original" cols="80"></textarea>
         <br>
         <label>Number of Characters: <input id="chars" type="number" value="280" min="20" max="2000"></label>
         <br>
         <button id="split" onclick="split()">Split!</button>
         <div id="boxes">
         </div>
-        <script>      
+        <script>
          function make_box(contents){
              let new_box=document.createElement('div')
+             new_box.className="box"
              let box_container=document.getElementById('boxes');
-             new_box.innerText=contents;
+             let cntnts= contents.trim()
+             new_box_contents=`<button class="copier">Copy</button><span class="contents">${cntnts}</span>`
+             new_box.innerHTML=new_box_contents;
              box_container.appendChild(new_box)
          }
 
@@ -26,11 +42,11 @@
              let sauce=document.getElementById('original').value;
              let max_box_chars=parseInt(document.getElementById('chars').value);
 
-             
+
              if (max_box_chars==NaN) {
                  return;
              }
-             
+
              let sauce_size=sauce.length;
              let idx=0
 
@@ -55,7 +71,7 @@
                  }
                  make_box(sauce.substring(start,idx+1))//substring includes start but excludes end!
              }
-             
+             document.querySelectorAll(".copier").forEach(function(c){c.onclick=function(e){navigator.clipboard.writeText(e.target.parentElement.querySelector(".contents").innerText)}})
          }
         </script>
     </body>
